@@ -14,4 +14,3 @@ The design works great on your phone or desktop, so you're covered either way. J
 
 ---
 
-Made by **sam4duh** — 2025 and beyond.
