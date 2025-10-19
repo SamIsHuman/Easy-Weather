@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/bjyQJ0tV/Drizzle.png?v=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Weather</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Light/Dark Theme Colors */
+    :root {
+      --background-main: #f9fafb;
+      --text-main: #1f2937;
+      --card-bg: #fff;
+      --accent-color: #3b82f6;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] {
+      --background-main: #0f172a;
+      --text-main: #f1f5f9;
+      --card-bg: #1e293b;
+      --accent-color: #60a5fa;
+      --shadow-color: rgba(0, 0, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Nunito Sans', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem 1rem;
+      background: var(--background-main);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      transition: background .3s, color .3s;
+    }
+
+    h1 { margin-bottom: 1.5rem; }
+
+    .search-area {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    #city-input {
+      padding: 8px 14px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      width: 250px;
+      font-size: 1rem;
+    }
+
+    #search-button {
+      background: var(--accent-color);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform .2s;
+    }
+
+    #search-button:hover { transform: scale(1.05); }
+
+    #theme-switcher {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: var(--card-bg);
+      padding: 6px 12px;
+      border-radius: 15px;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      font-size: .9rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .weather-display-card {
+      background: var(--card-bg);
+      color: var(--text-main);
+      border-radius: 16px;
+      box-shadow: 0 4px 15px var(--shadow-color);
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      transition: all .3s;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 1rem 0;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      background: var(--background-main);
+      transition: all .2s;
+    }
+
+    .tab.active {
+      background: var(--accent-color);
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .forecast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .forecast-item {
+      background: var(--background-main);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: .9rem;
+    }
+
+    .forecast-item span { display: block; margin-bottom: 4px; }
+    .forecast-item .day-name { font-weight: bold; }
+
+    footer {
+      margin-top: auto;
+      padding-top: 2rem;
+      font-size: .8rem;
+      opacity: .6;
+      text-align: center;
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <div id="theme-switcher">☀️ Light Mode</div>
+  <h1>Quick Weather</h1>
+
+  <div class="search-area">
+    <input type="text" id="city-input" placeholder="Enter city name...">
+    <button id="search-button">Search</button>
+  </div>
+
+  <div id="weather-display" class="weather-display-card">
+    Enter a city to see the forecast! 🌍
+  </div>
+
+  <footer>
+    Powered by wttr.in | © sam4duh 2025-Through
+  </footer>
+
+  <script>
+    const API_BASE_URL = "https://wttr.in/";
+    const weatherDisplay = document.getElementById('weather-display');
+    const searchButton = document.getElementById('search-button');
+    const cityInput = document.getElementById('city-input');
+    const themeSwitcher = document.getElementById('theme-switcher');
+
+    // Format 2400 time to 12hr AM/PM
+    function formatTime(timeStr) {
+      const hour = parseInt(timeStr) / 100;
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const h = hour % 12 || 12;
+      return `${h} ${ampm}`;
+    }
+
+    // Convert YYYY-MM-DD → readable date
+    function getReadableDay(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+
+    function setTheme(theme) {
+      document.body.dataset.theme = theme;
+      themeSwitcher.textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+
+    themeSwitcher.addEventListener('click', () => {
+      const current = document.body.dataset.theme;
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    async function fetchWeather(city) {
+      weatherDisplay.innerHTML = 'Loading forecast...';
+      try {
+        const res = await fetch(`${API_BASE_URL}${city}?format=j1`);
+        if (!res.ok) throw new Error(`Could not find weather for "${city}".`);
+        const data = await res.json();
+        renderWeatherUI(data);
+      } catch (err) {
+        weatherDisplay.innerHTML = `Error: ${err.message} 😢`;
+      }
+    }
+
+    function renderWeatherUI(data) {
+      const city = data.nearest_area[0].areaName[0].value;
+
+      weatherDisplay.innerHTML = `
+        <h2>${city}</h2>
+        <div class='tabs'>
+          <div class='tab active' data-view='today'>Today</div>
+          <div class='tab' data-view='tomorrow'>Tomorrow</div>
+          <div class='tab' data-view='week'>3-Day</div>
+        </div>
+        <div id='weather-content'></div>
+      `;
+
+      const weatherContent = document.getElementById('weather-content');
+
+      const renderContent = (view) => {
+        if (view === 'today') {
+          const curr = data.current_condition[0];
+          let html = `<p>Now: ${curr.temp_C}°C & ${curr.weatherDesc[0].value}</p><div class='forecast-grid'>`;
+          data.weather[0].hourly.forEach(hour => {
+            html += `
+              <div class='forecast-item'>
+                <span>${formatTime(hour.time)}</span>
+                <span>${hour.tempC}°C</span>
+                <span>${hour.weatherDesc[0].value}</span>
+              </div>`;
+          });
+          html += `</div>`;
+          weatherContent.innerHTML = html;
+        } else if (view === 'tomorrow') {
+          const tmr = data.weather[1];
+          let html = `<p>${getReadableDay(tmr.date)} Forecast</p><div class='forecast-grid'>`;
+          tmr.hourly.forEach(hour => {
+            html += `
+              <div class='forecast-item'>
+                <span>${formatTime(hour.time)}</span>
+                <span>${hour.tempC}°C</span>
+                <span>${hour.weatherDesc[0].value}</span>
+              </div>`;
+          });
+          html += `</div>`;
+          weatherContent.innerHTML = html;
+        } else {
+          let html = `<div class='forecast-grid'>`;
+          data.weather.forEach(day => {
+            html += `
+              <div class='forecast-item'>
+                <span class='day-name'>${getReadableDay(day.date)}</span>
+                <span>${day.maxtempC}° / ${day.mintempC}°C</span>
+                <span>${day.hourly[4].weatherDesc[0].value}</span>
+              </div>`;
+          });
+          html += `</div>`;
+          weatherContent.innerHTML = html;
+        }
+      };
+
+      weatherDisplay.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', e => {
+          weatherDisplay.querySelector('.tab.active').classList.remove('active');
+          e.target.classList.add('active');
+          renderContent(e.target.dataset.view);
+        });
+      });
+
+      renderContent('today');
+    }
+
+    function handleSearch() {
+      const city = cityInput.value.trim();
+      if (city) {
+        fetchWeather(city);
+        cityInput.value = '';
+      } else {
+        weatherDisplay.innerHTML = "Please enter a city name first.";
+      }
+    }
+
+    searchButton.addEventListener('click', handleSearch);
+    cityInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') handleSearch();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => setTheme('dark'));
+  </script>
+</body>
+</html>
