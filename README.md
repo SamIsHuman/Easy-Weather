@@ -1,12 +1,12 @@
 # Quick Weather 🌤
 
-Ever need to know what the weather's going to be like? Quick Weather is a straightforward little app that lets you check the forecast for any city. No bells and whistles, just the weather you're looking for.
+Ever need to know what the weather's going to be like? Quick Weather is a straightforward little web app that lets you check the forecast for any city.
 
 ## What You Get
 
-You can see today's forecast, what tomorrow looks like, and a 3-day outlook. It's built with just HTML, CSS, and JavaScript—nothing fancy, no framework bloat. If you're into that dark mode life, we've got a toggle for that too.
+You can see today's forecast, what tomorrow looks like, and a 3-day outlook. It's built with just HTML, CSS, and JavaScript
 
-The app pulls its data from [wttr.in](https://wttr.in), which is honestly pretty reliable for this sort of thing.
+The app pulls its data from [wttr.in](https://wttr.in), which is pretty reliable.
 
 ## How to Use It
 
