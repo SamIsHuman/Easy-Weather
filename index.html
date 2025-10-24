@@ -1,27 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="https://i.ibb.co/bjyQJ0tV/Drizzle.png?v=1">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://i.ibb.co/bjyQJ0tV/Drizzle.png?v=1">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quick Weather</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    /* Light/Dark Theme Colors */
-    :root {
-      --background-main: #f9fafb;
-      --text-main: #1f2937;
-      --card-bg: #fff;
-      --accent-color: #3b82f6;
-      --shadow-color: rgba(0, 0, 0, 0.1);
-    }
+  <title>Easy Weather</title>
 
-    [data-theme="dark"] {
-      --background-main: #0f172a;
-      --text-main: #f1f5f9;
-      --card-bg: #1e293b;
-      --accent-color: #60a5fa;
-      --shadow-color: rgba(0, 0, 0, 0.25);
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #fdfaf4;
+      --text: #2f2f2f;
+      --card: #ffffff;
+      --accent: #ffb347;
+      --shadow: rgba(0, 0, 0, 0.1);
     }
 
     * {
@@ -32,17 +27,21 @@
     body {
       margin: 0;
       padding: 2rem 1rem;
-      background: var(--background-main);
-      color: var(--text-main);
+      background: var(--bg);
+      color: var(--text);
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      transition: background .3s, color .3s;
     }
 
-    h1 { margin-bottom: 1.5rem; }
+    h1 {
+      margin-bottom: 1.5rem;
+      font-weight: 800;
+      color: #333;
+    }
 
+    /* Search box */
     .search-area {
       display: flex;
       gap: 8px;
@@ -50,51 +49,50 @@
     }
 
     #city-input {
-      padding: 8px 14px;
-      border: 1px solid #ccc;
-      border-radius: 20px;
+      padding: 10px 16px;
+      border: 1px solid #d0c6b6;
+      border-radius: 25px;
       width: 250px;
       font-size: 1rem;
+      background: #fff8ed;
+      transition: 0.2s;
+    }
+
+    #city-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 8px rgba(255,179,71,0.3);
     }
 
     #search-button {
-      background: var(--accent-color);
+      background: var(--accent);
       color: #fff;
       border: none;
-      border-radius: 20px;
-      padding: 8px 20px;
+      border-radius: 25px;
+      padding: 10px 22px;
       font-weight: bold;
       cursor: pointer;
-      transition: transform .2s;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 3px 10px rgba(255,179,71,0.3);
     }
 
-    #search-button:hover { transform: scale(1.05); }
-
-    #theme-switcher {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: var(--card-bg);
-      padding: 6px 12px;
-      border-radius: 15px;
-      box-shadow: 0 2px 8px var(--shadow-color);
-      font-size: .9rem;
-      cursor: pointer;
-      user-select: none;
+    #search-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(255,179,71,0.4);
     }
 
+    /* Weather box */
     .weather-display-card {
-      background: var(--card-bg);
-      color: var(--text-main);
-      border-radius: 16px;
-      box-shadow: 0 4px 15px var(--shadow-color);
-      padding: 1.5rem;
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: 0 4px 15px var(--shadow);
+      padding: 1.8rem;
       width: 100%;
       max-width: 600px;
       text-align: center;
-      transition: all .3s;
     }
 
+    /* Tabs */
     .tabs {
       display: flex;
       justify-content: center;
@@ -106,16 +104,17 @@
       padding: 8px 16px;
       border-radius: 20px;
       cursor: pointer;
-      background: var(--background-main);
+      background: #fff3e0;
       transition: all .2s;
     }
 
     .tab.active {
-      background: var(--accent-color);
+      background: var(--accent);
       color: #fff;
       font-weight: bold;
     }
 
+    /* Forecast layout */
     .forecast-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -124,28 +123,57 @@
     }
 
     .forecast-item {
-      background: var(--background-main);
+      background: #fffaf0;
       border-radius: 12px;
       padding: 12px;
       font-size: .9rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
-    .forecast-item span { display: block; margin-bottom: 4px; }
-    .forecast-item .day-name { font-weight: bold; }
+    .forecast-item span {
+      display: block;
+      margin-bottom: 4px;
+    }
 
+    .forecast-item .day-name {
+      font-weight: bold;
+    }
+
+    /* Footer */
     footer {
       margin-top: auto;
       padding-top: 2rem;
-      font-size: .8rem;
-      opacity: .6;
+      font-size: .85rem;
+      opacity: .7;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity .2s;
+    }
+
+    footer a:hover { opacity: 0.8; }
+
+    .github-logo {
+      width: 20px;
+      height: 20px;
+      filter: grayscale(100%) brightness(0.4);
     }
   </style>
 </head>
-<body data-theme="dark">
 
-  <div id="theme-switcher">☀️ Light Mode</div>
-  <h1>Quick Weather</h1>
+<body>
+  <h1>Easy Weather</h1>
 
   <div class="search-area">
     <input type="text" id="city-input" placeholder="Enter city name...">
@@ -153,11 +181,15 @@
   </div>
 
   <div id="weather-display" class="weather-display-card">
-    Enter a city to see the forecast! 🌍
+    Enter a city to see the forecast! 🌤️
   </div>
 
   <footer>
-    Powered by wttr.in | © sam4duh 2025-Through
+    <a href="https://github.com/SamIsHuman/Easy-Weather" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub" class="github-logo">
+      View on GitHub
+    </a>
+    <p>Powered by wttr.in | © sam4duh 2025</p>
   </footer>
 
   <script>
@@ -165,31 +197,18 @@
     const weatherDisplay = document.getElementById('weather-display');
     const searchButton = document.getElementById('search-button');
     const cityInput = document.getElementById('city-input');
-    const themeSwitcher = document.getElementById('theme-switcher');
 
-    // Format 2400 time to 12hr AM/PM
-    function formatTime(timeStr) {
-      const hour = parseInt(timeStr) / 100;
-      const ampm = hour >= 12 ? 'PM' : 'AM';
-      const h = hour % 12 || 12;
-      return `${h} ${ampm}`;
-    }
+    const formatTime = (t) => {
+      const h = parseInt(t) / 100;
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const hour = h % 12 || 12;
+      return `${hour} ${ampm}`;
+    };
 
-    // Convert YYYY-MM-DD → readable date
-    function getReadableDay(dateStr) {
-      const date = new Date(dateStr);
-      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-    }
-
-    function setTheme(theme) {
-      document.body.dataset.theme = theme;
-      themeSwitcher.textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
-    }
-
-    themeSwitcher.addEventListener('click', () => {
-      const current = document.body.dataset.theme;
-      setTheme(current === 'dark' ? 'light' : 'dark');
-    });
+    const getReadableDay = (dateStr) => {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    };
 
     async function fetchWeather(city) {
       weatherDisplay.innerHTML = 'Loading forecast...';
@@ -205,7 +224,6 @@
 
     function renderWeatherUI(data) {
       const city = data.nearest_area[0].areaName[0].value;
-
       weatherDisplay.innerHTML = `
         <h2>${city}</h2>
         <div class='tabs'>
@@ -221,38 +239,44 @@
       const renderContent = (view) => {
         if (view === 'today') {
           const curr = data.current_condition[0];
-          let html = `<p>Now: ${curr.temp_C}°C & ${curr.weatherDesc[0].value}</p><div class='forecast-grid'>`;
-          data.weather[0].hourly.forEach(hour => {
+          let html = `
+            <p>Now: ${curr.temp_C}°C (${curr.weatherDesc[0].value})</p>
+            <p>Feels like: ${curr.FeelsLikeC}°C</p>
+            <div class='forecast-grid'>
+          `;
+          data.weather[0].hourly.forEach(h => {
             html += `
               <div class='forecast-item'>
-                <span>${formatTime(hour.time)}</span>
-                <span>${hour.tempC}°C</span>
-                <span>${hour.weatherDesc[0].value}</span>
+                <span>${formatTime(h.time)}</span>
+                <span>${h.tempC}°C</span>
+                <span>${h.weatherDesc[0].value}</span>
               </div>`;
           });
           html += `</div>`;
           weatherContent.innerHTML = html;
+
         } else if (view === 'tomorrow') {
           const tmr = data.weather[1];
           let html = `<p>${getReadableDay(tmr.date)} Forecast</p><div class='forecast-grid'>`;
-          tmr.hourly.forEach(hour => {
+          tmr.hourly.forEach(h => {
             html += `
               <div class='forecast-item'>
-                <span>${formatTime(hour.time)}</span>
-                <span>${hour.tempC}°C</span>
-                <span>${hour.weatherDesc[0].value}</span>
+                <span>${formatTime(h.time)}</span>
+                <span>${h.tempC}°C</span>
+                <span>${h.weatherDesc[0].value}</span>
               </div>`;
           });
           html += `</div>`;
           weatherContent.innerHTML = html;
+
         } else {
           let html = `<div class='forecast-grid'>`;
-          data.weather.forEach(day => {
+          data.weather.forEach(d => {
             html += `
               <div class='forecast-item'>
-                <span class='day-name'>${getReadableDay(day.date)}</span>
-                <span>${day.maxtempC}° / ${day.mintempC}°C</span>
-                <span>${day.hourly[4].weatherDesc[0].value}</span>
+                <span class='day-name'>${getReadableDay(d.date)}</span>
+                <span>${d.maxtempC}° / ${d.mintempC}°C</span>
+                <span>${d.hourly[4].weatherDesc[0].value}</span>
               </div>`;
           });
           html += `</div>`;
@@ -273,20 +297,18 @@
 
     function handleSearch() {
       const city = cityInput.value.trim();
-      if (city) {
-        fetchWeather(city);
-        cityInput.value = '';
-      } else {
+      if (!city) {
         weatherDisplay.innerHTML = "Please enter a city name first.";
+        return;
       }
+      fetchWeather(city);
+      cityInput.value = '';
     }
 
     searchButton.addEventListener('click', handleSearch);
     cityInput.addEventListener('keypress', e => {
       if (e.key === 'Enter') handleSearch();
     });
-
-    document.addEventListener('DOMContentLoaded', () => setTheme('dark'));
   </script>
 </body>
 </html>
