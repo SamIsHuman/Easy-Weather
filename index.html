@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="https://i.ibb.co/bjyQJ0tV/Drizzle.png?v=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Easy Weather</title>
+
+  <!-- using Nunito Sans cause it looks clean -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>Easy Weather</h1>
+
+  <div class="search-area">
+    <input type="text" id="city-input" placeholder="Enter city name..." aria-label="Enter city name to search weather">
+    <button id="search-button" aria-label="Search for weather forecast">Search</button>
+    <button id="location-button" aria-label="Use my current location">📍</button>
+  </div>
+
+  <!-- weather info goes here -->
+  <div id="weather-display" class="weather-display-card" role="region" aria-live="polite" aria-label="Weather information">
+    Enter a city to see the forecast! 🌤️
+  </div>
+
+  <footer>
+    <a href="https://github.com/SamIsHuman/Easy-Weather" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub" class="github-logo">
+      View on GitHub
+    </a>
+    <p>Powered by Open-Meteo | © sam4duh 2025</p>
+  </footer>
+
+  <script src="index.js"></script>
+</body>
+</html>
