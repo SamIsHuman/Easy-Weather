@@ -1,6 +1,6 @@
 # Easy Weather 🌤
 
-Ever need to know what the weather's going to be like? Quick Weather is a straightforward little web app that lets you check the forecast for any city.
+Ever need to know what the weather's going to be like? Easy Weather is a straightforward little web app that lets you check the forecast for any city.
 
 ## What You Get
 
