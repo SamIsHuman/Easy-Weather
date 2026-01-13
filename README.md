@@ -1,6 +1,7 @@
 # Easy Weather 🌤
 
 Ever need to know what the weather's going to be like? Easy Weather is a straightforward little web app that lets you check the forecast for any city.
+You can see today’s forecast, tomorrow’s weather, a 7-day outlook, plus the current UV Index and AQI.
 
 **The app pulls its data from [Open-Meteo](https://open-meteo.com/), which is very reliable.**
 
@@ -10,7 +11,7 @@ You can now see the AQI(Air Quality Index) of/for any city.
 
 ## What You Get
 
-You can see today's forecast, what tomorrow looks like, and a 7-day outlook. It's built with just HTML, CSS, and JavaScript
+You can see today’s forecast, tomorrow’s weather, a 7-day outlook, plus the current UV Index and AQI.
 
 ![desktop-screenshot of the website](image/desktop_easyweather.free.nf.png)
 
@@ -24,4 +25,4 @@ If the webite shows any type of DNS-Error , try changing your DNS to Google(1.1.
 Or try : https://samishuman.github.io/Easy-Weather/
 
 ---
-
+*last update ( UTC+05:45 ): 6:14 PM-Tuesday, January 13, 2026*
