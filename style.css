@@ -228,13 +228,13 @@ h1 {
   color: #89b4fa;
 }
 
-/* UV Index styling */
-.uv-index {
+/* UV Index and AQI styling */
+.uv-index, .aqi-index {
   margin: 0.5rem 0;
   font-size: 0.95rem;
 }
 
-.uv-value {
+.uv-value, .aqi-value {
   display: inline-block;
   padding: 4px 12px;
   border-radius: 12px;
