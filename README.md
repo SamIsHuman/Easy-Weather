@@ -6,7 +6,7 @@ Ever need to know what the weather's going to be like? Easy Weather is a straigh
 
 # Latest Update(s)
 
-You can now see the AQI(Air Quality Index) for any city.
+You can now see the AQI(Air Quality Index) of/for any city.
 
 ## What You Get
 
