@@ -12,13 +12,7 @@ You can now see the AQI(Air Quality Index) for any city.
 
 You can see today's forecast, what tomorrow looks like, and a 7-day outlook. It's built with just HTML, CSS, and JavaScript
 
-## Desktop
-
 ![desktop-screenshot of the website](image/desktop_easyweather.free.nf.png)
-
-## Mobile/Non-Desktop
-
-<img src="image/non-desktop_easyweather,free,nf.png" width="380" height="1280"/>
 
 ---
 
