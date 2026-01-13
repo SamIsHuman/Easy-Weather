@@ -1,6 +1,7 @@
 // using Open-Meteo API - it's free and doesn't need a key!
 const GEOCODING_API = "https://geocoding-api.open-meteo.com/v1/search";
 const WEATHER_API = "https://api.open-meteo.com/v1/forecast";
+const AIR_QUALITY_API = "https://air-quality-api.open-meteo.com/v1/air-quality";
 
 const weatherDisplay = document.getElementById('weather-display');
 const searchButton = document.getElementById('search-button');
@@ -65,6 +66,17 @@ const getUVInfo = (uv) => {
   return { level: 'Extreme', color: '#cba6f7' };
 };
 
+// get AQI description and color based on US AQI standard
+const getAQIInfo = (aqi) => {
+  if (aqi === null || aqi === undefined) return { level: 'N/A', color: '#9399b2' };
+  if (aqi <= 50) return { level: 'Good', color: '#a6e3a1' };
+  if (aqi <= 100) return { level: 'Moderate', color: '#f9e2af' };
+  if (aqi <= 150) return { level: 'Unhealthy for Sensitive', color: '#fab387' };
+  if (aqi <= 200) return { level: 'Unhealthy', color: '#f38ba8' };
+  if (aqi <= 300) return { level: 'Very Unhealthy', color: '#cba6f7' };
+  return { level: 'Hazardous', color: '#b4befe' };
+};
+
 // geocode city name to coordinates
 async function geocodeCity(cityName) {
   const res = await fetch(`${GEOCODING_API}?name=${encodeURIComponent(cityName)}&count=1&language=en&format=json`);
@@ -107,8 +119,8 @@ async function fetchWeather(cityName) {
     // first geocode the city
     const location = await geocodeCity(cityName);
     
-    // then fetch weather data
-    const params = new URLSearchParams({
+    // fetch weather data
+    const weatherParams = new URLSearchParams({
       latitude: location.lat,
       longitude: location.lon,
       current: 'temperature_2m,apparent_temperature,weather_code,uv_index',
@@ -118,14 +130,33 @@ async function fetchWeather(cityName) {
       forecast_days: 7
     });
     
-    const res = await fetch(`${WEATHER_API}?${params}`);
+    // fetch air quality data separately
+    const aqiParams = new URLSearchParams({
+      latitude: location.lat,
+      longitude: location.lon,
+      current: 'us_aqi',
+      timezone: 'auto'
+    });
     
-    if (!res.ok) {
+    const [weatherRes, aqiRes] = await Promise.all([
+      fetch(`${WEATHER_API}?${weatherParams}`),
+      fetch(`${AIR_QUALITY_API}?${aqiParams}`)
+    ]);
+    
+    if (!weatherRes.ok) {
       throw new Error(`Could not fetch weather data.`);
     }
     
-    const data = await res.json();
-    renderWeatherUI(data, location);
+    const weatherData = await weatherRes.json();
+    let aqiData = null;
+    
+    if (aqiRes.ok) {
+      aqiData = await aqiRes.json();
+      console.log('AQI data received:', aqiData); // Debug log
+    }
+    
+    console.log('Weather data received:', weatherData); // Debug log
+    renderWeatherUI(weatherData, location, aqiData);
   } catch (err) {
     weatherDisplay.innerHTML = `Error: ${err.message} 😢`;
   } finally {
@@ -163,7 +194,7 @@ async function fetchWeatherByCoords(lat, lon) {
     }
     
     // fetch weather data
-    const params = new URLSearchParams({
+    const weatherParams = new URLSearchParams({
       latitude: lat,
       longitude: lon,
       current: 'temperature_2m,apparent_temperature,weather_code,uv_index',
@@ -173,14 +204,31 @@ async function fetchWeatherByCoords(lat, lon) {
       forecast_days: 7
     });
     
-    const res = await fetch(`${WEATHER_API}?${params}`);
+    // fetch air quality data separately
+    const aqiParams = new URLSearchParams({
+      latitude: lat,
+      longitude: lon,
+      current: 'us_aqi',
+      timezone: 'auto'
+    });
     
-    if (!res.ok) {
+    const [weatherRes, aqiRes] = await Promise.all([
+      fetch(`${WEATHER_API}?${weatherParams}`),
+      fetch(`${AIR_QUALITY_API}?${aqiParams}`)
+    ]);
+    
+    if (!weatherRes.ok) {
       throw new Error(`Could not fetch weather data.`);
     }
     
-    const data = await res.json();
-    renderWeatherUI(data, location);
+    const weatherData = await weatherRes.json();
+    let aqiData = null;
+    
+    if (aqiRes.ok) {
+      aqiData = await aqiRes.json();
+    }
+    
+    renderWeatherUI(weatherData, location, aqiData);
   } catch (err) {
     weatherDisplay.innerHTML = `Error: ${err.message} 😢`;
   } finally {
@@ -189,7 +237,7 @@ async function fetchWeatherByCoords(lat, lon) {
 }
 
 // render the UI with tabs and everything
-function renderWeatherUI(data, location) {
+function renderWeatherUI(data, location, aqiData = null) {
   const cityName = location.country ? `${location.name} (${location.country})` : location.name;
   
   // set up the basic structure
@@ -229,6 +277,19 @@ function renderWeatherUI(data, location) {
         uvP.className = 'uv-index';
         uvP.innerHTML = `UV Index: <span class="uv-value" style="background: ${uvInfo.color}">${Math.round(curr.uv_index)} - ${uvInfo.level}</span>`;
         fragment.appendChild(uvP);
+      }
+      
+      // AQI if available
+      if (aqiData && aqiData.current && aqiData.current.us_aqi !== null && aqiData.current.us_aqi !== undefined) {
+        const aqiValue = aqiData.current.us_aqi;
+        console.log('AQI value:', aqiValue); // Debug log
+        const aqiInfo = getAQIInfo(aqiValue);
+        const aqiP = document.createElement('p');
+        aqiP.className = 'aqi-index';
+        aqiP.innerHTML = `Air Quality: <span class="aqi-value" style="background: ${aqiInfo.color}">${Math.round(aqiValue)} - ${aqiInfo.level}</span>`;
+        fragment.appendChild(aqiP);
+      } else {
+        console.log('AQI data not available for this location');
       }
       
       // hourly forecast grid - next 24 hours
