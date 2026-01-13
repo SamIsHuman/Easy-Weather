@@ -2,6 +2,10 @@
 
 Ever need to know what the weather's going to be like? Easy Weather is a straightforward little web app that lets you check the forecast for any city.
 
+# Latest Update(s)
+
+You can now see the AQI(Air Quality Index) for any city. From [Open-Meteo](https://open-meteo.com/).
+
 ## What You Get
 
 You can see today's forecast, what tomorrow looks like, and a 7-day outlook. It's built with just HTML, CSS, and JavaScript
