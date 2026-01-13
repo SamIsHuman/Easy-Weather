@@ -472,18 +472,3 @@ cityInput.addEventListener('keypress', e => {
     handleSearch();
   }
 });
-
-// check if there's a city in the URL (like /london or /new-york)
-// so people can share direct links to cities
-window.addEventListener('DOMContentLoaded', () => {
-  const path = window.location.pathname;
-  // remove leading slash and any trailing slash
-  const cityFromUrl = path.replace(/^\/|\/$/g, '');
-  
-  // ignore if it's empty or is a file (like index.html)
-  if (cityFromUrl && cityFromUrl.length > 0 && !cityFromUrl.includes('.')) {
-    // replace dashes with spaces and decode special characters
-    const cityName = decodeURIComponent(cityFromUrl.replace(/-/g, ' '));
-    fetchWeather(cityName);
-  }
-});
