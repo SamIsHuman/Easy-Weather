@@ -1,7 +1,6 @@
 # Easy Weather 🌤
 
-[Easy Weather](https://easyweather.free.nf/)
-Ever need to know what the weather's going to be like? Easy Weather is a straightforward little web app that lets you check the forecast for any city.
+Ever need to know what the weather's going to be like? [Easy Weather](https://easyweather.free.nf/)is a straightforward little web app that lets you check the forecast for any city.
 
 **The app pulls its data from [Open-Meteo](https://open-meteo.com/), which is very reliable.**
 
@@ -25,4 +24,4 @@ If the webite shows any type of DNS-Error , try changing your DNS to Google(1.1.
 Or try : https://samishuman.github.io/Easy-Weather/
 
 ---
-*last update ( UTC+05:07 ): 6:15 PM-Tuesday, January 13, 2026*
+*last update ( UTC+05:09 ): 6:15 PM-Tuesday, January 13, 2026*
